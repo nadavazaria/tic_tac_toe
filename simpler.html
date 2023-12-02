@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X/O</title>
+    <style>
+        button {
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>the simplest game ever XO</h2>
+    <div onclick="playTurn()">
+        <!-- i give each button a meeningful id's B is for Button 
+            the left number is the row number and the right is the column number -->
+        <button id="B11">-</button>
+        <button id="B12">-</button>
+        <button id="B13">-</button><br>
+        <button id="B21">-</button>
+        <button id="B22">-</button>
+        <button id="B23">-</button><br>
+        <button id="B31">-</button>
+        <button id="B32">-</button>
+        <button id="B33">-</button>
+    </div>
+    <!--  i let the player know who starts -->
+    <h3 id="headLine">the turn player is X</h3>
+    <script>
+        // define variables as we did in class
+        let turnPlayer = "X"
+        winner = "-"
+        let turnCounter = 0
+        
+        function playTurn() {
+// i check if the box is empty and also if the game is finished
+// if the game is finished i dont want them to keep playing 
+            if (event.target.innerText == "-" && winner == "-") {
+                //  i input the player's charecter in the button as text so it shows on screen
+                event.target.innerText = turnPlayer
+                // i make a quick fork to change the turnPlayer intermitanly 
+                turnPlayer = turnPlayer == "X" ? "O" : "X"
+                turnCounter++
+                // i call a different function to check for the winner 
+                checkWinner()
+            }
+        }
+        function checkWinner() {
+            //  i check for each row in the table if there are three of the same chatecter
+            if (B11.innerText == B12.innerText && B12.innerText == B13.innerText && B12.innerText !== "-") {
+                winner = B11.innerText
+            }
+            if (B21.innerText == B22.innerText && B22.innerText == B23.innerText && B22.innerText !== "-") {
+                winner = B21.innerText
+            }
+            if (B31.innerText == B32.innerText && B32.innerText == B33.innerText && B32.innerText !== "-") {
+                winner = B31.innerText
+            }
+            //  i check for each column in the table if there are three of the same chatecter
+            if (B11.innerText == B22.innerText && B22.innerText == B33.innerText && B22.innerText !== "-") {
+                winner = B11.innerText
+            }
+            if (B13.innerText == B22.innerText && B22.innerText == B31.innerText && B22.innerText !== "-") {
+                winner = B13.innerText
+            }
+            if (B11.innerText == B21.innerText && B21.innerText == B31.innerText && B11.innerText !== "-") {
+                winner = B11.innerText
+            }
+         //  i check for each diagonal in the table if there are three of the same chatecter
+            if (B12.innerText == B22.innerText && B22.innerText == B32.innerText && B22.innerText !== "-") {
+                winner = B12.innerText
+            }
+            if (B13.innerText == B23.innerText && B23.innerText == B33.innerText && B13.innerText !== "-") {
+                winner = B13.innerText
+            }
+
+// after macking the checks if there is still no winner the game continue's and the turn player is shown on screen
+            if (winner == "-") {
+                headLine.innerText = `the turn player is ${turnPlayer}`
+            }
+// if the winner was decided it shows on screen 
+            if (turnCounter < 9 && winner !== "-")
+                headLine.innerText = `the winner is ${winner}`
+// check for tie
+            if (turnCounter == 9 && winner == "-") {
+                headLine.innerText == `its a tie`
+            }
+
+        }
+
+
+
+    </script>
+
+</body>
+
+</html>

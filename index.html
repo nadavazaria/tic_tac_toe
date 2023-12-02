@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- import bootstrap shit -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    <!-- /* some style to make it look less awefull */ -->
+    <style>
+        button {
+            height: 80px;
+            width: 80px;
+            margin: 5px;
+        }
+
+        div {
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>X/0 the simplest game ever</h1><br><br>
+    <!-- this is a button from Bootstrap that shows a popUp screen explaining the rules as to not have them visible the whole time -->
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+            style="width: max-content;">
+            how to play
+        </button>
+        <!-- the content of the popUp -->
+        <p class="dropdown-menu">
+            X/0 is a simple 1vs1 game to play with friend <br>
+            the turn player will be displayed on screen for your convinience,<br>
+            the turn player places thier chrecter on the 3by3 board. <br>
+            you win the game if you manage to place three of your charecters in a row column or diagonal. <br>
+            enjoy!
+        </p>
+        <br><br>
+        <h1 id="header">the first player is X</h1>
+    </div>
+    <!-- i make a table with the empty buttns and give them a simple id  -->
+    <div onclick="playTurn()">
+        <button id="B0">.</button>
+        <button id="B1">.</button>
+        <button id="B2">.</button><br>
+        <button id="B3">.</button>
+        <button id="B4">.</button>
+        <button id="B5">.</button><br>
+        <button id="B6">.</button>
+        <button id="B7">.</button>
+        <button id="B8">.</button>
+    </div>
+    <!-- i make a play again button to clear the board -->
+    <div>
+        <button style="width: fit-content;" type="button" class="btn btn-success" onclick="playAgain()">play
+            again</button>
+
+    </div>
+
+</body>
+
+
+<script>
+    // set initial vars
+    let turnPlayer = "X"
+    let turnCounter = 0
+    let winner = ""
+    // i make an array to save the board layout and initailize it to the correct size (9) and with different inputs for easier use later 
+    let ar = []
+    for (let index = 0; index < 9; index++) {
+        ar[index] = index
+    }
+
+    function playTurn() {
+        // a check if the clicked on box is empty and if the game isn't finished already
+        if (event.target.innerText == `.` && winner == "") {
+            // *important*
+            //  i use the event.target.id (line 97) to pull the id of the pressed button
+            //  i know that the id is a string 2 charecters long (i made it that way...) 
+            //  the first char is B (for button) and the second char coresponds to the button placement in the array ar 
+            // (B0 for the 0'th input in ar B1 for the 1'th and so on )
+            // i use the function  charAt(1) (found it threw gepetto) to pull the charecter that matches the array placment
+            //  and use it to record the play in right spot inside ar 
+            ar[event.target.id.charAt(1)] = turnPlayer
+            event.target.innerText = turnPlayer
+            turnPlayer = turnPlayer == "X" ? "0" : "X"
+            header.innerText = `the turn player is ${turnPlayer} player`
+            turnCounter++
+            if (turnCounter >= 5) {
+                checkWinner()
+                if (turnCounter == 9 && winner == "") {
+                    header.innerText = "its a tie"
+                }
+            }
+
+        }
+
+        function checkWinner() {
+            // i check the rows and clmns with a seperete function as to not repeat myself
+            // i check with the first box of each row using the checkRow function
+            checkRow(0)
+            checkRow(3)
+            checkRow(6)
+            // i check each clmn number with the checkClmn fucction
+            checkClmn(0)
+            checkClmn(1)
+            checkClmn(2)
+            // check digonals 
+            checkDig()
+        }
+
+    }
+
+    // for a reminder 
+    // the buttons look like this 
+    // 0 1 2
+    // 3 4 5
+    // 6 7 8
+    function checkRow(num) {
+        // i check the three boxes nest to each other
+        if (ar[num] == ar[num + 1] && ar[num + 1] == ar[num + 2]) {
+            // i declare the winner threw the information ib the checked inputs of the array
+            winner = ar[num]
+            // print the winner on screen
+            header.innerText = `the winner is the ${winner} player`
+        }
+    }
+    function checkClmn(num) {
+        // i check the tree boxes directly above one another
+        if (ar[num] == ar[num + 3] && ar[num + 3] == ar[num + 6]) {
+            // i declare the winner threw the information ib the checked inputs of the array            
+            winner = ar[num]
+            // print the winner on screen
+            header.innerText = `the winner is the ${winner} player`
+        }
+    }
+    function checkDig() {
+        //  i make a comparison of the ar inputs that corespond to the diagonals  
+        // 0 1 2
+        // 3 4 5
+        // 6 7 8
+        if (ar[0] == ar[4] && ar[4] == ar[8]) {
+            // declare winner
+            winner = ar[0]
+            // print on screen
+            header.innerText = `the winner is the ${winner} player`
+        }
+        // same for the other diagonal
+        if (ar[2] == ar[4] && ar[4] == ar[6]) {
+            winner = ar[2]
+            header.innerText = `the winner is the ${winner} player`
+        }
+    }
+    function playAgain() {
+        // i make the winner go first
+        if (winner !== "") {
+            header.innerText = `the winner starts.
+            ${winner}'s turn`
+        } else {
+            header.innerText = "the first player is X"
+        }
+        // make the winner the one that goes first 
+        turnPlayer = winner
+        // reinitalizing the variables arrays and buutons 
+        winner = ""
+        turnCounter = 0
+        for (let index = 0; index < 9; index++) {
+            ar[index] = index
+        }
+        B0.innerText = "."
+        B1.innerText = "."
+        B2.innerText = "."
+        B3.innerText = "."
+        B4.innerText = "."
+        B5.innerText = "."
+        B6.innerText = "."
+        B7.innerText = "."
+        B8.innerText = "."
+    }
+    // if you want you can try keeping score of the wins and ties and show them on screen
+</script>
+
+</html>
